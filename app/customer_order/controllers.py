@@ -1,51 +1,10 @@
 import datetime
-import json
-
-import sqlalchemy.exc
-import werkzeug.exceptions
 from sqlalchemy import desc
-from werkzeug.exceptions import HTTPException
-from flask import Flask, render_template, jsonify, request, abort
-from flask_sqlalchemy import SQLAlchemy
-from flask_cors import CORS
+from flask import jsonify, request, abort, Blueprint
+from app import app
+from app.customer_order.entities import Customer, Order
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://wuluoyu:password@localhost/backend'
-db = SQLAlchemy(app)
-CORS(app)
-
-
-class Customer(db.Model):
-    __tablename__ = 'customer'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    dob = db.Column(db.Date)
-    orders = db.relationship('Order', backref='customer')
-
-    def __init__(self, name, dob):
-        self.name = name
-        self.dob = dob
-
-    def __repr__(self):
-        return '<h3>%r</h3>' % self.name
-
-
-class Order(db.Model):
-    __tablename__ = 'order'
-    id = db.Column(db.Integer, primary_key=True)
-    item_name = db.Column(db.String(100), nullable=False)
-    item_price = db.Column(db.DECIMAL, nullable=False)
-    datetime = db.Column(db.DateTime, nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-
-    def __init__(self, item_name, item_price, datetime, customer_id):
-        self.item_name = item_name
-        self.item_price = item_price
-        self.datetime = datetime
-        self.customer_id = customer_id
-
-    def __repr__(self):
-        return '<h3>%r</h3>' % self.item_name
+mod_customer_order = Blueprint('customer_order', __name__, url_prefix='')
 
 
 @app.route('/customer', methods=['GET'])
@@ -58,10 +17,17 @@ def get_customers():
 
     all_customers = []
     for customer in customers:
+        orders = []
+        for order in customer.orders:
+            orders.append(order.id)
         results = {
             "customer_id": customer.id,
             "customer_name": customer.name,
             "customer_dob": customer.dob.strftime("%Y-%m-%d"),
+            "customer_orders": {
+                "orders": orders,
+                "total_orders": len(orders),
+            }
         }
         all_customers.append(results)
 
@@ -91,7 +57,7 @@ def get_orders():
             "order_time": order.datetime,
             "customer_id": order.customer_id,
         }
-        all_orders.append(order)
+        all_orders.append(results)
 
     return jsonify(
         {
@@ -132,15 +98,3 @@ def create_customer():
             "response": "Customer created",
         }
     )
-
-
-@app.errorhandler(400)
-def missing_customer_data(e):
-    return jsonify(error=str(e)), 400
-
-
-@app.errorhandler(404)
-def invalid_customer_data(e):
-    return jsonify(error=str(e)), 404
-
-
