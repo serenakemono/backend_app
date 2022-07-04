@@ -1,7 +1,5 @@
 import json
 
-from app import create_app
-
 
 def test_get_all_customers(test_client):
     """

@@ -25,13 +25,17 @@ def initialize_extensions(app, dev):
     db.init_app(app)
 
     with app.app_context():
-        engine = create_engine('postgresql://wuluoyu:password@localhost/backend_test')
-        engine.execute('DROP TABLE IF EXISTS customer CASCADE ;')
-        engine.execute('DROP TABLE IF EXISTS "order";')
-        from .models import Customer, Order
-        db.create_all()
-        insert_dummy_data()
-        db.session.commit()
+        if not dev:
+            engine = create_engine('postgresql://wuluoyu:password@localhost/backend_test')
+            engine.execute('DROP TABLE IF EXISTS customer CASCADE ;')
+            engine.execute('DROP TABLE IF EXISTS "order";')
+            from .models import Customer, Order
+            db.create_all()
+            insert_dummy_data()
+            db.session.commit()
+        else:
+            db.create_all()
+            db.session.commit()
 
 
 def insert_dummy_data():
