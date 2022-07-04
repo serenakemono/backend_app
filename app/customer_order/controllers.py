@@ -1,10 +1,15 @@
 import datetime
 from sqlalchemy import desc
 from flask import jsonify, request, abort, Blueprint
-from app import app
+from app import app, db
 from app.customer_order.entities import Customer, Order
 
 mod_customer_order = Blueprint('customer_order', __name__, url_prefix='')
+
+
+@app.route('/')
+def hello_world():
+    return "Hello, World!"
 
 
 @app.route('/customer', methods=['GET'])
@@ -94,7 +99,6 @@ def create_customer():
 
     return jsonify(
         {
-            "success": True,
-            "response": "Customer created",
+            "customer_id": 5,
         }
     )
