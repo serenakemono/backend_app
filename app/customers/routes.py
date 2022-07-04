@@ -18,7 +18,6 @@ def get_customers():
     all_customers = retrieve_customers_info(customers)
 
     return jsonify({
-            "success": True,
             "customers": all_customers,
             "total_customers": len(customers),
         }), 200

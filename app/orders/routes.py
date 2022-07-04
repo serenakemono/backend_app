@@ -16,7 +16,6 @@ def get_orders():
 
     return jsonify(
         {
-            "success": True,
             "orders": all_orders,
             "total_orders": len(all_orders),
         }

@@ -1,4 +1,4 @@
-from app.models import Customer
+from app.models import Customer, Order
 
 
 def test_new_customer():
@@ -19,3 +19,9 @@ def test_new_order():
     WHEN a new Order is created
     THEN check the item_name, item_price, datetime, customer_id are defined correctly
     """
+    order = Order('Coke', 2.00, '2022-07-04 19:11:25', 1)
+    assert order.item_name == 'Coke'
+    assert order.item_price == 2.00
+    assert order.datetime == '2022-07-04 19:11:25'
+    assert order.customer_id == 1
+    assert order.__repr__() == f'<Order: {order.id}>'
