@@ -135,7 +135,7 @@ def test_create_customer_success(test_client):
     response = test_client.post(
         '/customer/create',
         json={"name": "Serena Wu Luoyu", "dob": "2000-07-15"})
-    assert response.status_code == 200
+    assert response.status_code == 201
     data = json.loads(response.data)
     assert data['customer_name'] == 'Serena Wu Luoyu'
     assert data['customer_dob'] == '2000-07-15'

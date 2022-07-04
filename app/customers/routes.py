@@ -53,7 +53,7 @@ def create_customer():
         "customer_id": customer.id,
         "customer_name": customer.name,
         "customer_dob": customer.dob.strftime("%Y-%m-%d"),
-    }), 200
+    }), 201
 
 
 def retrieve_customer_params(customer_data):
