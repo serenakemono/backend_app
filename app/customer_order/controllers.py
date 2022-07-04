@@ -97,8 +97,9 @@ def create_customer():
     db.session.add(customer)
     db.session.commit()
 
-    return jsonify(
-        {
-            "customer_id": 5,
-        }
-    )
+    return jsonify({
+        "customer_id": customer.id,
+        "customer_name": customer.name,
+        "customer_dob": customer.dob.strftime("%Y-%m-%d"),
+    })
+

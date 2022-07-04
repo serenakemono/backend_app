@@ -168,4 +168,3 @@ body (application/json):
 | `customer_id`  | integer  | the id for the customer created
 | `customer_name`  | string  | the name of the customer created
 | `customer_dob`  | date  | the date of birth of the customer created
-| `customer_orders`  | object  | the orders made by the customer created, which should be empty
