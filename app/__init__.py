@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 
 # app = Flask(__name__)
 # app.config.from_object('config')
@@ -18,6 +18,7 @@ def create_app(dev):
     app.config.from_object('instance.config.DevConfig')
     initialize_extensions(app)
     register_blueprints(app)
+    register_error_handlers(app)
     return app
 
 
@@ -32,20 +33,20 @@ def register_blueprints(app):
     app.register_blueprint(order_blueprint)
 
 
+def register_error_handlers(app):
+    app.register_error_handler(400, handle_bad_request)
+    app.register_error_handler(404, handle_not_found)
+
+
 def setup_db():
     db.drop_all()
     db.create_all()
+    db.session.commit()
 
-# @app.errorhandler(400)
-# def missing_customer_data(e):
-#     return jsonify(error=str(e)), 400
-#
-#
-# @app.errorhandler(404)
-# def invalid_customer_data(e):
-#     return jsonify(error=str(e)), 404
-#
-# # clear all previous data stored after restarting
-# db.drop_all()
-# db.create_all()
-# db.session.commit()
+
+def handle_bad_request(e):
+    return jsonify(error=str(e)), 400
+
+
+def handle_not_found(e):
+    return jsonify(error=str(e)), 404
