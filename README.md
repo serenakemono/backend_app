@@ -126,7 +126,7 @@ params:
 | `number`  | integer  | The number of youngest customers. If the number is larger than the total number of customers, all customers will be returned. | `1`
 
 #### Responses
-* [200](#200)
+* [200](#200-1)
 ##### 200
 A set of customers
 
@@ -185,7 +185,7 @@ body (application/json):
 | `dob`  | string  | date of birth of the customer in the format of YYYY-mm-dd | `"2000-07-15"`
 
 #### Responses
-* [200](#200)
+* [200](#200-2)
 * [400](#400)
 ##### 200
 A customer
@@ -221,7 +221,7 @@ Get information for all orders.
 #### Request
 GET `/order`
 #### Responses
-* [200](#200)
+* [200](#200-3)
 ##### 200
 A set of orders
 
@@ -283,8 +283,8 @@ params:
 | `customer_id`  | integer  | the id for the customer | `2`
 
 #### Responses
-* [200](#200)
-* [400](#400)
+* [200](#200-4)
+* [400](#400-1)
 * [404](#404)
 ##### 200
 A set of orders
