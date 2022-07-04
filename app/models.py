@@ -17,6 +17,13 @@ class Customer(db.Model):
     def __repr__(self):
         return '<Customer: %s>' % self.name
 
+    @staticmethod
+    def create(name: str, dob: str):
+        new_customer = Customer(name, dob)
+        db.session.add(new_customer)
+        db.session.commit()
+        return new_customer
+
 
 class Order(db.Model):
     __tablename__ = 'order'
@@ -34,3 +41,10 @@ class Order(db.Model):
 
     def __repr__(self):
         return f'<Order: {self.id}>'
+
+    @staticmethod
+    def create(item_name: str, item_price: decimal, datetime: str, customer_id: int):
+        new_order = Order(item_name, item_price, datetime, customer_id)
+        db.session.add(new_order)
+        db.session.commit()
+        return new_order

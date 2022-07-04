@@ -3,8 +3,7 @@ from sqlalchemy import desc
 from flask import jsonify, request, abort, Blueprint
 from app import db
 from app.models import Customer
-
-customer_blueprint = Blueprint('customers', __name__, url_prefix='')
+from . import customer_blueprint
 
 
 @customer_blueprint.route('/customer', methods=['GET'])
@@ -48,9 +47,7 @@ def create_customer():
     validate_customer_name(name)
     validate_customer_dob(dob)
 
-    customer = Customer(name=name, dob=dob)
-    db.session.add(customer)
-    db.session.commit()
+    customer = Customer.create(name, dob)
 
     return jsonify({
         "customer_id": customer.id,
@@ -65,7 +62,7 @@ def retrieve_customer_params(customer_data):
         dob = customer_data["dob"]
         return name, dob
     except KeyError:
-        abort(404, description="Customer name and/or dob missing")
+        abort(400, description="Customer name and/or dob missing")
 
 
 def validate_customer_name(name):
@@ -81,4 +78,3 @@ def validate_customer_dob(dob):
             abort(400, description="Invalid date, should be before today")
     except ValueError:
         abort(400, description="Incorrect date format, should be YYYY-mm-dd")
-

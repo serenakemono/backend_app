@@ -1,7 +1,8 @@
+import datetime
+
 from flask import jsonify, request, Blueprint
 from app.models import Order
-
-order_blueprint = Blueprint('orders', __name__, url_prefix='')
+from . import order_blueprint
 
 
 @order_blueprint.route('/order', methods=['GET'])
@@ -29,7 +30,7 @@ def retrieve_orders_info(orders):
             "order_id": order.id,
             "item_name": order.item_name,
             "item_price": order.item_price,
-            "order_time": order.datetime,
+            "order_time": order.datetime.strftime('%Y-%m-%d %H:%M:%S'),
             "customer_id": order.customer_id,
         }
         all_orders.append(results)

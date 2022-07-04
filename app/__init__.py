@@ -1,9 +1,8 @@
 from flask import Flask, jsonify
-
-# app = Flask(__name__)
-# app.config.from_object('config')
-# db = SQLAlchemy(app)
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
+
+from tests.dummy_data import customer_dummy_data, order_dummy_data
 
 db = SQLAlchemy()
 
@@ -15,16 +14,37 @@ def create_app(dev):
     else:
         CONFIG_FILE = 'instance.config.TestConfig'
     print(CONFIG_FILE)
-    app.config.from_object('instance.config.DevConfig')
-    initialize_extensions(app)
+    app.config.from_object(CONFIG_FILE)
+    initialize_extensions(app, dev)
     register_blueprints(app)
     register_error_handlers(app)
     return app
 
 
-def initialize_extensions(app):
+def initialize_extensions(app, dev):
     db.init_app(app)
 
+    with app.app_context():
+        engine = create_engine('postgresql://wuluoyu:password@localhost/backend_test')
+        engine.execute('DROP TABLE IF EXISTS customer CASCADE ;')
+        engine.execute('DROP TABLE IF EXISTS "order";')
+        from .models import Customer, Order
+        db.create_all()
+        insert_dummy_data()
+        db.session.commit()
+
+
+def insert_dummy_data():
+    from app.models import Customer, Order
+    for customer in customer_dummy_data:
+        Customer.create(customer['name'], customer['dob'])
+    for order in order_dummy_data:
+        Order.create(
+            order['item_name'],
+            order['item_price'],
+            order['datetime'],
+            order['customer_id']
+        )
 
 def register_blueprints(app):
     from app.customers.routes import customer_blueprint
@@ -36,6 +56,7 @@ def register_blueprints(app):
 def register_error_handlers(app):
     app.register_error_handler(400, handle_bad_request)
     app.register_error_handler(404, handle_not_found)
+    app.register_error_handler(405, handle_method_not_allowed)
 
 
 def setup_db():
@@ -50,3 +71,7 @@ def handle_bad_request(e):
 
 def handle_not_found(e):
     return jsonify(error=str(e)), 404
+
+
+def handle_method_not_allowed(e):
+    return jsonify(error="405: Method Not Allowed"), 405
