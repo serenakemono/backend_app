@@ -1,18 +1,18 @@
 import datetime
 from sqlalchemy import desc
 from flask import jsonify, request, abort, Blueprint
-from app import app, db
-from app.customer_order.entities import Customer, Order
+from app import db
+from app.customer_order.models import Customer, Order
 
-mod_customer_order = Blueprint('customer_order', __name__, url_prefix='')
+customer_order_blueprint = Blueprint('customer_order', __name__, url_prefix='')
 
 
-@app.route('/')
+@customer_order_blueprint.route('/')
 def hello_world():
     return "Hello, World!"
 
 
-@app.route('/customer', methods=['GET'])
+@customer_order_blueprint.route('/customer', methods=['GET'])
 def get_customers():
     number = request.args.get('number', type=int, default=None)
     if number is None:
@@ -22,13 +22,11 @@ def get_customers():
 
     all_customers = retrieve_customers_info(customers)
 
-    return jsonify(
-        {
+    return jsonify({
             "success": True,
             "customers": all_customers,
             "total_customers": len(customers),
-        }
-    )
+        }), 200
 
 
 def retrieve_customers_info(customers):
@@ -50,7 +48,7 @@ def retrieve_customers_info(customers):
     return all_customers
 
 
-@app.route('/order', methods=['GET'])
+@customer_order_blueprint.route('/order', methods=['GET'])
 def get_orders():
     customer_id = request.args.get('customer_id', type=int, default=None)
     if customer_id is None:
@@ -66,7 +64,7 @@ def get_orders():
             "orders": all_orders,
             "total_orders": len(all_orders),
         }
-    )
+    ), 200
 
 
 def retrieve_orders_info(orders):
@@ -83,7 +81,7 @@ def retrieve_orders_info(orders):
     return all_orders
 
 
-@app.route('/customer/create', methods=['POST'])
+@customer_order_blueprint.route('/customer/create', methods=['POST'])
 def create_customer():
     name, dob = retrieve_customer_params(request.json)
     validate_customer_name(name)
@@ -97,7 +95,7 @@ def create_customer():
         "customer_id": customer.id,
         "customer_name": customer.name,
         "customer_dob": customer.dob.strftime("%Y-%m-%d"),
-    })
+    }), 200
 
 
 def retrieve_customer_params(customer_data):
