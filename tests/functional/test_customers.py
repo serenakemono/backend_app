@@ -198,6 +198,6 @@ def test_create_customer_with_future_dob(test_client):
     """
     response = test_client.post(
         '/customer/create',
-        json={"name": "Serena Wu Luoyu", "dob": "2030-07-015"})
+        json={"name": "Serena Wu Luoyu", "dob": "2030-07-15"})
     assert response.status_code == 400
     assert b'customer_id' not in response.data

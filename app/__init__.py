@@ -50,6 +50,7 @@ def insert_dummy_data():
             order['customer_id']
         )
 
+
 def register_blueprints(app):
     from app.customers.routes import customer_blueprint
     from app.orders.routes import order_blueprint
@@ -61,12 +62,6 @@ def register_error_handlers(app):
     app.register_error_handler(400, handle_bad_request)
     app.register_error_handler(404, handle_not_found)
     app.register_error_handler(405, handle_method_not_allowed)
-
-
-def setup_db():
-    db.drop_all()
-    db.create_all()
-    db.session.commit()
 
 
 def handle_bad_request(e):
