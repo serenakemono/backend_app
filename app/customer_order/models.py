@@ -1,6 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
+import decimal
 
-db = SQLAlchemy()
+from app import db
 
 
 class Customer(db.Model):
@@ -10,9 +10,12 @@ class Customer(db.Model):
     dob = db.Column(db.Date)
     orders = db.relationship('Order', backref='customer')
 
-    def __init__(self, name, dob):
+    def __init__(self, name: str, dob: str):
         self.name = name
         self.dob = dob
+
+    def __repr__(self):
+        return '<Customer: %s>' % self.name
 
 
 class Order(db.Model):
@@ -23,8 +26,11 @@ class Order(db.Model):
     datetime = db.Column(db.DateTime, nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
-    def __init__(self, item_name, item_price, datetime, customer_id):
+    def __init__(self, item_name: str, item_price: decimal, datetime: str, customer_id: int):
         self.item_name = item_name
         self.item_price = item_price
         self.datetime = datetime
         self.customer_id = customer_id
+
+    def __repr__(self):
+        return f'<Order: {self.id}>'
