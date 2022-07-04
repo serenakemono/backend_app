@@ -1,4 +1,4 @@
-from app.customer_order.models import Customer, Order
+from app.models import Customer
 
 
 def test_new_customer():

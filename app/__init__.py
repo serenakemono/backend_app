@@ -26,8 +26,10 @@ def initialize_extensions(app):
 
 
 def register_blueprints(app):
-    from app.customer_order.controllers import customer_order_blueprint
-    app.register_blueprint(customer_order_blueprint)
+    from app.customers.routes import customer_blueprint
+    from app.orders.routes import order_blueprint
+    app.register_blueprint(customer_blueprint)
+    app.register_blueprint(order_blueprint)
 
 
 def setup_db():
