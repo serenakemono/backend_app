@@ -293,7 +293,6 @@ body (application/json):
 
 | Attribute name  | Data type | Description |
 | ------------- | ------------- | --------- |
-| `success`  | boolean  | the status of the request
 | `orders`  | array of objects  | information for orders made by the identified customer
 | `total_orders`  | integer  | the number of orders
 
