@@ -110,7 +110,7 @@ response example:
             }
         }
     ],
-    "total_customers": 3
+    "total_customers": 2
 }
 ```
 
